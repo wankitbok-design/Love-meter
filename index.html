@@ -100,56 +100,45 @@
         }
 
         .question-card {
-            margin-top: 20px;
+            margin-top: 25px;
             animation: slideIn 0.4s ease-out forwards;
+            text-align: left;
         }
 
         .question-text {
-            font-size: 1.25rem;
-            margin-bottom: 25px;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
             font-weight: 600;
             line-height: 1.4;
             color: #ffffff;
+            border-left: 3px solid var(--primary-pink);
+            padding-left: 10px;
         }
 
         .options-list {
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .option-btn {
             background: #1e1d24;
             color: var(--text-light);
             border: 1px solid #2e2c36;
-            padding: 16px 22px;
+            padding: 16px 20px;
             border-radius: 14px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
             text-align: left;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
             width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
 
         .option-btn:hover {
             background: #27252e;
             border-color: var(--secondary-pink);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 74, 117, 0.1);
-        }
-
-        .option-btn::after {
-            content: '✨';
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .option-btn:hover::after {
-            opacity: 1;
         }
 
         .result-screen {
@@ -183,8 +172,29 @@
             letter-spacing: 5px;
         }
 
+        /* Start Button Layout */
+        .start-btn {
+            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 74, 117, 0.4);
+            transition: transform 0.2s, opacity 0.2s;
+            margin-top: 15px;
+            width: 80%;
+        }
+        
+        .start-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -199,20 +209,23 @@
 <div class="heart-bg" id="heart-bg"></div>
 
 <div class="container">
-    <!-- Active Quiz View -->
-    <div id="quiz-container">
+    <!-- Main Welcome Layout (What you see in the screenshot) -->
+    <div id="welcome-view">
         <div class="header-icon">💌</div>
         <h1>A Special Quiz For You</h1>
         <p class="subtitle">I created this quick little space to find out how you truly feel about us. Be completely honest!</p>
-        
-        <!-- Questions load dynamically inside here -->
+        <button class="start-btn" onclick="startQuiz()">Begin Quiz ✨</button>
+    </div>
+
+    <!-- Active Question Container -->
+    <div id="quiz-view" style="display: none;">
         <div id="quiz-body"></div>
     </div>
 
-    <!-- Result Screen View -->
+    <!-- Final Result Layout -->
     <div id="result-screen" class="result-screen">
         <div class="sparkle-badge">Quiz Complete ✨</div>
-        <div class="heart-display" id="heart-rating">⭐⭐⭐⭐•</div>
+        <div class="heart-display" id="heart-rating">❤️❤️❤️❤️❤️</div>
         <p class="rating-desc" id="rating-desc">Thank you for opening your heart to me.</p>
     </div>
 </div>
@@ -248,7 +261,8 @@
     let currentQuestionIndex = 0;
     let totalScore = 0;
 
-    const quizContainer = document.getElementById('quiz-container');
+    const welcomeView = document.getElementById('welcome-view');
+    const quizView = document.getElementById('quiz-view');
     const quizBody = document.getElementById('quiz-body');
     const resultScreen = document.getElementById('result-screen');
 
@@ -256,17 +270,24 @@
         const bg = document.getElementById('heart-bg');
         if (!bg) return;
         const heartSymbols = ['❤️', '💖', '✨', '💕'];
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 10; i++) {
             setTimeout(() => {
                 const heart = document.createElement('div');
                 heart.classList.add('floating-heart');
                 heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
                 heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
-                heart.style.fontSize = (Math.random() * 10 + 16) + 'px';
+                heart.style.animationDuration = (Math.random() * 2 + 5) + 's';
+                heart.style.fontSize = (Math.random() * 10 + 15) + 'px';
                 bg.appendChild(heart);
-            }, i * 400);
+            }, i * 300);
         }
+    }
+
+    // Triggered manually to clear cache errors
+    function startQuiz() {
+        welcomeView.style.display = 'none';
+        quizView.style.display = 'block';
+        loadQuestion();
     }
 
     function loadQuestion() {
@@ -283,8 +304,8 @@
                 <div class="options-list">
         `;
 
-        currentQ.options.forEach((option, idx) => {
-            html += `<button class="option-btn" onclick="handleAnswer(${option.score})"><span>${option.text}</span></button>`;
+        currentQ.options.forEach((option) => {
+            html += `<button class="option-btn" onclick="handleAnswer(${option.score})">${option.text}</button>`;
         });
 
         html += `</div></div>`;
@@ -298,16 +319,6 @@
     }
 
     function showResults() {
-        quizContainer.style.display = 'none';
+        quizView.style.display = 'none';
         resultScreen.style.display = 'block';
 
-        const heartRating = document.getElementById('heart-rating');
-        const desc = document.getElementById('rating-desc');
-
-        if (totalScore >= 8) {
-            heartRating.innerText = "❤️ ❤️ ❤️ ❤️ ❤️";
-            desc.innerHTML = "<b>Wow... You love me completely.</b><br><br>Reading your answers makes me so incredibly happy. The feeling is 100% mutual, and I am so lucky to have you in my life. Let's keep building this beautiful connection together.";
-        } else if (totalScore >= 6) {
-            heartRating.innerText = "💖 💖 💖 💖";
-            desc.innerHTML = "<b>We have something genuinely special.</b><br><br>You care about me deeply and there's a real, sweet spark between us. I love how comfortable we are together, and I can't wait to see how close we grow.";
-        } else {
