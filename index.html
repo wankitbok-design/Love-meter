@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Message From Me To You</title>
+    <title>A Special Quiz For You</title>
     <style>
         :root {
             --primary-pink: #ff4a75;
@@ -33,7 +33,6 @@
             position: relative;
         }
 
-        /* Floating Hearts Background Animation */
         .heart-bg {
             position: fixed;
             top: 0;
@@ -96,24 +95,21 @@
         .subtitle {
             color: var(--text-gray);
             font-size: 0.95rem;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
             line-height: 1.4;
         }
 
         .question-card {
-            display: none;
+            margin-top: 20px;
             animation: slideIn 0.4s ease-out forwards;
-        }
-
-        .question-card.active {
-            display: block;
         }
 
         .question-text {
             font-size: 1.25rem;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-weight: 600;
             line-height: 1.4;
+            color: #ffffff;
         }
 
         .options-list {
@@ -156,7 +152,6 @@
             opacity: 1;
         }
 
-        /* Result Layout */
         .result-screen {
             display: none;
             animation: celebrateIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -189,8 +184,8 @@
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes celebrateIn {
@@ -201,29 +196,28 @@
 </head>
 <body>
 
-<!-- Animated background container -->
 <div class="heart-bg" id="heart-bg"></div>
 
 <div class="container">
-    <div id="quiz-header">
+    <!-- Active Quiz View -->
+    <div id="quiz-container">
         <div class="header-icon">💌</div>
         <h1>A Special Quiz For You</h1>
         <p class="subtitle">I created this quick little space to find out how you truly feel about us. Be completely honest!</p>
+        
+        <!-- Questions load dynamically inside here -->
+        <div id="quiz-body"></div>
     </div>
 
-    <!-- FIXED: Added missing element where questions load -->
-    <div id="quiz-body"></div>
-
-    <!-- Result Screen -->
+    <!-- Result Screen View -->
     <div id="result-screen" class="result-screen">
         <div class="sparkle-badge">Quiz Complete ✨</div>
-        <div class="heart-display" id="heart-rating">⭐⭐⭐⭐⭐</div>
+        <div class="heart-display" id="heart-rating">⭐⭐⭐⭐•</div>
         <p class="rating-desc" id="rating-desc">Thank you for opening your heart to me.</p>
     </div>
 </div>
 
 <script>
-    // Configured questions written directly to HER perspective
     const questions = [
         {
             question: "When my name pops up on your phone screen, what's your genuine reaction?",
@@ -254,29 +248,24 @@
     let currentQuestionIndex = 0;
     let totalScore = 0;
 
+    const quizContainer = document.getElementById('quiz-container');
     const quizBody = document.getElementById('quiz-body');
-    const quizHeader = document.getElementById('quiz-header');
     const resultScreen = document.getElementById('result-screen');
 
-    // Create background floating hearts
     function createAmbientHearts() {
         const bg = document.getElementById('heart-bg');
         if (!bg) return;
         const heartSymbols = ['❤️', '💖', '✨', '💕'];
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 12; i++) {
             setTimeout(() => {
                 const heart = document.createElement('div');
                 heart.classList.add('floating-heart');
                 heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
                 heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
-                heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+                heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                heart.style.fontSize = (Math.random() * 10 + 16) + 'px';
                 bg.appendChild(heart);
-                
-                setInterval(() => {
-                    heart.style.left = Math.random() * 100 + 'vw';
-                }, 6000);
-            }, i * 300);
+            }, i * 400);
         }
     }
 
@@ -289,12 +278,12 @@
         const currentQ = questions[currentQuestionIndex];
         
         let html = `
-            <div class="question-card active">
+            <div class="question-card">
                 <p class="question-text">${currentQ.question}</p>
                 <div class="options-list">
         `;
 
-        currentQ.options.forEach(option => {
+        currentQ.options.forEach((option, idx) => {
             html += `<button class="option-btn" onclick="handleAnswer(${option.score})"><span>${option.text}</span></button>`;
         });
 
@@ -309,8 +298,7 @@
     }
 
     function showResults() {
-        quizHeader.style.display = 'none';
-        quizBody.style.display = 'none';
+        quizContainer.style.display = 'none';
         resultScreen.style.display = 'block';
 
         const heartRating = document.getElementById('heart-rating');
@@ -318,3 +306,8 @@
 
         if (totalScore >= 8) {
             heartRating.innerText = "❤️ ❤️ ❤️ ❤️ ❤️";
+            desc.innerHTML = "<b>Wow... You love me completely.</b><br><br>Reading your answers makes me so incredibly happy. The feeling is 100% mutual, and I am so lucky to have you in my life. Let's keep building this beautiful connection together.";
+        } else if (totalScore >= 6) {
+            heartRating.innerText = "💖 💖 💖 💖";
+            desc.innerHTML = "<b>We have something genuinely special.</b><br><br>You care about me deeply and there's a real, sweet spark between us. I love how comfortable we are together, and I can't wait to see how close we grow.";
+        } else {
