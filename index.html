@@ -30,33 +30,6 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        .heart-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .floating-heart {
-            position: absolute;
-            color: rgba(255, 74, 117, 0.15);
-            font-size: 20px;
-            animation: floatUp 6s linear infinite;
-            bottom: -50px;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-105vh) rotate(360deg); opacity: 0; }
         }
 
         .container {
@@ -68,29 +41,18 @@
             box-shadow: 0 15px 35px rgba(255, 74, 117, 0.15);
             text-align: center;
             border: 1px solid #26242c;
-            position: relative;
-            z-index: 10;
-            backdrop-filter: blur(10px);
         }
 
         .header-icon {
             font-size: 3rem;
             margin-bottom: 15px;
             display: inline-block;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
         }
 
         h1 {
             color: #ffffff;
             font-size: 1.8rem;
             margin-bottom: 12px;
-            letter-spacing: -0.5px;
         }
 
         .subtitle {
@@ -102,7 +64,6 @@
 
         .question-card {
             margin-top: 15px;
-            animation: slideIn 0.3s ease-out forwards;
             text-align: left;
         }
 
@@ -117,7 +78,6 @@
         }
 
         .options-list {
-            list-style: none;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -132,18 +92,12 @@
             cursor: pointer;
             font-size: 0.95rem;
             text-align: left;
-            transition: background 0.2s;
             width: 100%;
             display: block;
         }
 
-        .option-btn:active {
-            background: #27252e;
-            border-color: var(--secondary-pink);
-        }
-
         .result-screen {
-            animation: celebrateIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            text-align: center;
         }
 
         .sparkle-badge {
@@ -187,21 +141,9 @@
             display: block;
             text-align: center;
         }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes celebrateIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
     </style>
 </head>
 <body>
-
-<div class="heart-bg" id="heart-bg"></div>
 
 <div class="container">
     <!-- Welcome View -->
@@ -209,7 +151,7 @@
         <div class="header-icon">💌</div>
         <h1>A Special Quiz For You</h1>
         <p class="subtitle">I created this quick little space to find out how you truly feel about us. Be completely honest!</p>
-        <button class="start-btn" onclick="nextStep(1)">Begin Quiz ✨</button>
+        <button class="start-btn" id="main-start-btn">Begin Quiz ✨</button>
     </div>
 
     <!-- Question 1 -->
@@ -253,22 +195,16 @@
 <script>
     let totalScore = 0;
 
-    // Background floating hearts initiation
-    const bg = document.getElementById('heart-bg');
-    if (bg) {
-        const heartSymbols = ['❤️', '💖', '✨', '💕'];
-        for (let i = 0; i < 8; i++) {
-            setTimeout(() => {
-                const heart = document.createElement('div');
-                heart.classList.add('floating-heart');
-                heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
-                heart.style.left = Math.random() * 90 + 'vw';
-                heart.style.animationDuration = (Math.random() * 2 + 5) + 's';
-                heart.style.fontSize = (Math.random() * 8 + 14) + 'px';
-                bg.appendChild(heart);
-            }, i * 400);
-        }
-    }
+    // Direct interface listeners to ensure click registration
+    document.getElementById('main-start-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        nextStep(1);
+    });
+    
+    document.getElementById('main-start-btn').addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        nextStep(1);
+    }, {passive: false});
 
     function nextStep(stepNumber) {
         document.getElementById('welcome-view').style.display = 'none';
@@ -298,3 +234,21 @@
         document.getElementById('q3-view').style.display = 'none';
         document.getElementById('result-screen').style.display = 'block';
 
+        const heartRating = document.getElementById('heart-rating');
+        const desc = document.getElementById('rating-desc');
+
+        if (totalScore >= 8) {
+            heartRating.innerText = "❤️ ❤️ ❤️ ❤️ ❤️";
+            desc.innerHTML = "<b>Wow... You love me completely.</b><br><br>Reading your answers makes me so incredibly happy. The feeling is 100% mutual, and I am so lucky to have you in my life. Let's keep building this beautiful connection together.";
+        } else if (totalScore >= 6) {
+            heartRating.innerText = "💖 💖 💖 💖";
+            desc.innerHTML = "<b>We have something genuinely special.</b><br><br>You care about me deeply and there's a real, sweet spark between us. I love how comfortable we are together, and I can't wait to see how close we grow.";
+        } else {
+            heartRating.innerText = "🌸 🌸 🌸";
+            desc.innerHTML = "<b>Thank you for being completely real with me.</b><br><br>It looks like we are taking things one step at a time, and that's okay. I really appreciate your honesty, and I value whatever place I hold in your life right now.";
+        }
+    }
+</script>
+
+</body>
+</html>
