@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Ultimate Love Meter</title>
+    <title>A Message From Me To You</title>
     <style>
         :root {
             --primary-pink: #ff4a75;
             --secondary-pink: #ff7597;
-            --bg-dark: #121214;
-            --card-bg: #1c1c1f;
+            --bg-dark: #0f0e11;
+            --card-bg: #16151a;
             --text-light: #f3f4f6;
-            --text-gray: #9ca3af;
+            --text-gray: #a0a0ab;
         }
 
         * {
@@ -29,34 +29,80 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Floating Hearts Background Animation */
+        .heart-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: rgba(255, 74, 117, 0.15);
+            font-size: 20px;
+            animation: floatUp 6s linear infinite;
+            bottom: -50px;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-105vh) rotate(360deg); opacity: 0; }
         }
 
         .container {
             background: var(--card-bg);
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 40px 30px;
             width: 100%;
-            max-width: 500px;
-            box-shadow: 0 10px 30px rgba(255, 74, 117, 0.1);
+            max-width: 480px;
+            box-shadow: 0 15px 35px rgba(255, 74, 117, 0.15);
             text-align: center;
-            border: 1px solid #2a2a2e;
+            border: 1px solid #26242c;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
         h1 {
-            color: var(--primary-pink);
+            color: #ffffff;
             font-size: 1.8rem;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
         }
 
         .subtitle {
             color: var(--text-gray);
             font-size: 0.95rem;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
+            line-height: 1.4;
         }
 
         .question-card {
             display: none;
-            animation: fadeIn 0.5s ease;
+            animation: slideIn 0.4s ease-out forwards;
         }
 
         .question-card.active {
@@ -64,9 +110,10 @@
         }
 
         .question-text {
-            font-size: 1.2rem;
-            margin-bottom: 25px;
+            font-size: 1.25rem;
+            margin-bottom: 30px;
             font-weight: 600;
+            line-height: 1.4;
         }
 
         .options-list {
@@ -77,100 +124,76 @@
         }
 
         .option-btn {
-            background: #252529;
+            background: #1e1d24;
             color: var(--text-light);
-            border: 2px solid transparent;
-            padding: 15px 20px;
-            border-radius: 12px;
+            border: 1px solid #2e2c36;
+            padding: 16px 22px;
+            border-radius: 14px;
             cursor: pointer;
             font-size: 1rem;
             text-align: left;
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .option-btn:hover {
-            background: #2e2e33;
+            background: #27252e;
             border-color: var(--secondary-pink);
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 74, 117, 0.1);
         }
 
-        .progress-bar-container {
-            width: 100%;
-            height: 6px;
-            background: #252529;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-pink), var(--secondary-pink));
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        /* Results Screen */
-        .result-screen {
-            display: none;
-            animation: scaleUp 0.5s ease forwards;
-        }
-
-        .meter-circle {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #252529 60%, transparent 61%);
-            margin: 0 auto 25px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 4px solid var(--primary-pink);
-            box-shadow: 0 0 20px rgba(255, 74, 117, 0.3);
-        }
-
-        .percentage {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: white;
-        }
-
-        .rating-title {
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-            color: var(--secondary-pink);
-        }
-
-        .rating-desc {
-            color: var(--text-gray);
-            line-height: 1.5;
-            margin-bottom: 30px;
-        }
-
-        .restart-btn {
-            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
+        .option-btn::after {
+            content: '✨';
+            opacity: 0;
             transition: opacity 0.2s;
         }
 
-        .restart-btn:hover {
-            opacity: 0.9;
+        .option-btn:hover::after {
+            opacity: 1;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Result Layout */
+        .result-screen {
+            display: none;
+            animation: celebrateIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        @keyframes scaleUp {
+        .sparkle-badge {
+            background: rgba(255, 74, 117, 0.1);
+            color: var(--secondary-pink);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 74, 117, 0.2);
+        }
+
+        .rating-desc {
+            color: #e4e4e7;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 35px;
+            font-weight: 500;
+        }
+
+        .heart-display {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            letter-spacing: 5px;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes celebrateIn {
             from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
         }
@@ -178,63 +201,52 @@
 </head>
 <body>
 
+<!-- Animated background container -->
+<div class="heart-bg" id="heart-bg"></div>
+
 <div class="container">
     <div id="quiz-header">
-        <h1>💞 Love Meter</h1>
-        <p class="subtitle">Answer honestly to find out where you stand</p>
-        <div class="progress-bar-container">
-            <div class="progress-bar" id="progress"></div>
-        </div>
+        <div class="header-icon">💌</div>
+        <h1>A Special Quiz For You</h1>
+        <p class="subtitle">I created this quick little space to find out how you truly feel about us. Be completely honest!</p>
     </div>
 
-    <!-- Quiz Wrapper -->
-    <div id="quiz-body">
-        <!-- Questions will be injected here dynamically by JavaScript -->
-    </div>
+    <!-- FIXED: Added missing element where questions load -->
+    <div id="quiz-body"></div>
 
     <!-- Result Screen -->
     <div id="result-screen" class="result-screen">
-        <div class="meter-circle">
-            <span class="percentage" id="final-score">0%</span>
-        </div>
-        <h2 class="rating-title" id="rating-title">Analyzing...</h2>
-        <p class="rating-desc" id="rating-desc"></p>
-        <button class="restart-btn" onclick="restartQuiz()">Try Again</button>
+        <div class="sparkle-badge">Quiz Complete ✨</div>
+        <div class="heart-display" id="heart-rating">⭐⭐⭐⭐⭐</div>
+        <p class="rating-desc" id="rating-desc">Thank you for opening your heart to me.</p>
     </div>
 </div>
 
 <script>
+    // Configured questions written directly to HER perspective
     const questions = [
         {
-            question: "How does he react when you text or call him?",
+            question: "When my name pops up on your phone screen, what's your genuine reaction?",
             options: [
-                { text: "Replies instantly with long, enthusiastic messages", score: 25 },
-                { text: "Takes some time but always gives thoughtful replies", score: 18 },
-                { text: "Gives dry, short replies or leaves me on read frequently", score: 5 }
+                { text: "It immediately brightens my mood and I click it instantly", score: 3 },
+                { text: "I smile and reply as soon as I finish what I'm doing", score: 2 },
+                { text: "I treat it like any other message or answer later", score: 1 }
             ]
         },
         {
-            question: "Does he remember the little things you mention in passing?",
+            question: "How do you feel when we talk or hang out for hours?",
             options: [
-                { text: "Yes! He surprises me by remembering tiny details", score: 25 },
-                { text: "Sometimes he forgets, but she genuinely tries", score: 15 },
-                { text: "He barely remembers important things I tell her", score: 0 }
+                { text: "Time flies by way too fast, I never want it to end", score: 3 },
+                { text: "It's always fun, peaceful, and comfortable", score: 2 },
+                { text: "It's nice, but I'm ready to head home after a bit", score: 1 }
             ]
         },
         {
-            question: "How does she behave when you are hanging out together?",
+            question: "When you look toward your future, do you see me somewhere in it?",
             options: [
-                { text: "Fully present, leans in, and keeps consistent eye contact", score: 25 },
-                { text: "Relaxed and friendly, though he checks his phone occasionally", score: 15 },
-                { text: "Distracted, looking around, or seems bored", score: 2 }
-            ]
-        },
-        {
-            question: "How does she act when you tell her about a rough day?",
-            options: [
-                { text: "Drops everything to listen, comfort, or help you", score: 25 },
-                { text: "Sends a sweet text checking up on you", score: 15 },
-                { text: "Seems indifferent or shifts the topic back to herself", score: 0 }
+                { text: "Absolutely, I want you right by my side", score: 3 },
+                { text: "I definitely hope you are a part of it", score: 2 },
+                { text: "I haven't thought that far ahead yet", score: 1 }
             ]
         }
     ];
@@ -245,17 +257,34 @@
     const quizBody = document.getElementById('quiz-body');
     const quizHeader = document.getElementById('quiz-header');
     const resultScreen = document.getElementById('result-screen');
-    const progressBar = document.getElementById('progress');
+
+    // Create background floating hearts
+    function createAmbientHearts() {
+        const bg = document.getElementById('heart-bg');
+        if (!bg) return;
+        const heartSymbols = ['❤️', '💖', '✨', '💕'];
+        for (let i = 0; i < 15; i++) {
+            setTimeout(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+                bg.appendChild(heart);
+                
+                setInterval(() => {
+                    heart.style.left = Math.random() * 100 + 'vw';
+                }, 6000);
+            }, i * 300);
+        }
+    }
 
     function loadQuestion() {
         if (currentQuestionIndex >= questions.length) {
             showResults();
             return;
         }
-
-        // Update progress bar
-        const progressPercent = (currentQuestionIndex / questions.length) * 100;
-        progressBar.style.width = `${progressPercent}%`;
 
         const currentQ = questions[currentQuestionIndex];
         
@@ -266,7 +295,7 @@
         `;
 
         currentQ.options.forEach(option => {
-            html += `<button class="option-btn" onclick="handleAnswer(${option.score})">${option.text}</button>`;
+            html += `<button class="option-btn" onclick="handleAnswer(${option.score})"><span>${option.text}</span></button>`;
         });
 
         html += `</div></div>`;
@@ -283,22 +312,9 @@
         quizHeader.style.display = 'none';
         quizBody.style.display = 'none';
         resultScreen.style.display = 'block';
-        progressBar.style.width = '100%';
 
-        document.getElementById('final-score').innerText = `${totalScore}%`;
-
-        const title = document.getElementById('rating-title');
+        const heartRating = document.getElementById('heart-rating');
         const desc = document.getElementById('rating-desc');
 
-        if (totalScore >= 85) {
-            title.innerText = "❤️ Pure Devotion (5/5) ❤️";
-            desc.innerText = "He is absolutely head over heels for you! He values your presence, remembers the small details, and truly cares about your happiness. Keep cherishing him!";
-        } else if (totalScore >= 60) {
-            title.innerText = "💖 Strong Connection (3.5/5) 💖";
-            desc.innerText = "There is a very clear spark here! He likes you a lot and puts healthy effort into the relationship. With a little more time, this could grow into something even deeper.";
-        } else if (totalScore >= 35) {
-            title.innerText = "💛 Mixed Signals (2.5/5) 💛";
-            desc.innerText = "He cares about you, but he might be holding back, shy, or unsure of his own feelings right now. Give it some time and observe him actions closely.";
-        } else {
-            title.innerText = "💔 One-Sided / Distant (1/5) 💔";
-            desc.innerText = "The connection seems low right now. he might be distracted by other things in his life, or the feelings might not be reciprocated. It might be time to have an open conversation.";
+        if (totalScore >= 8) {
+            heartRating.innerText = "❤️ ❤️ ❤️ ❤️ ❤️";
