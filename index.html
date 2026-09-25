@@ -30,34 +30,6 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Ambient Animated Background System */
-        .heart-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .floating-heart {
-            position: absolute;
-            color: rgba(255, 74, 117, 0.12);
-            font-size: 20px;
-            animation: floatUp 7s linear infinite;
-            bottom: -50px;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-105vh) rotate(360deg); opacity: 0; }
         }
 
         .container {
@@ -69,79 +41,63 @@
             box-shadow: 0 15px 35px rgba(255, 74, 117, 0.15);
             text-align: center;
             border: 1px solid #26242c;
-            position: relative;
-            z-index: 10;
-            backdrop-filter: blur(10px);
         }
 
         .header-icon {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
+            font-size: 3rem;
+            margin-bottom: 15px;
             display: inline-block;
-            animation: pulse 2.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-            100% { transform: scale(1); }
         }
 
         h1 {
             color: #ffffff;
             font-size: 1.8rem;
             margin-bottom: 12px;
-            letter-spacing: -0.5px;
         }
 
         .subtitle {
             color: var(--text-gray);
             font-size: 0.95rem;
-            margin-bottom: 30px;
-            line-height: 1.5;
+            margin-bottom: 25px;
+            line-height: 1.4;
         }
 
-        /* Standard Content View Panel */
-        .view-panel {
-            width: 100%;
+        .question-card {
+            margin-top: 15px;
             text-align: left;
         }
 
         .question-text {
-            font-size: 1.2rem;
-            margin-bottom: 25px;
+            font-size: 1.15rem;
+            margin-bottom: 20px;
             font-weight: 600;
             line-height: 1.4;
             color: #ffffff;
-            border-left: 4px solid var(--primary-pink);
-            padding-left: 12px;
+            border-left: 3px solid var(--primary-pink);
+            padding-left: 10px;
         }
 
         .options-list {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
         }
 
-        /* Large Universal Click Target Interface Elements */
         .option-btn {
             background: #1e1d24;
             color: var(--text-light);
             border: 1px solid #2e2c36;
-            padding: 18px 20px;
-            border-radius: 16px;
+            padding: 16px 20px;
+            border-radius: 14px;
             cursor: pointer;
-            font-size: 0.98rem;
+            font-size: 0.95rem;
             text-align: left;
             width: 100%;
             display: block;
-            transition: all 0.2s ease;
         }
 
-        .option-btn:hover, .option-btn:active {
+        .option-btn:active {
             background: #27252e;
-            border-color: var(--secondary-pink);
-            transform: translateY(-1px);
         }
 
         .result-screen {
@@ -151,7 +107,7 @@
         .sparkle-badge {
             background: rgba(255, 74, 117, 0.1);
             color: var(--secondary-pink);
-            padding: 6px 18px;
+            padding: 6px 16px;
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 600;
@@ -164,7 +120,7 @@
             color: #e4e4e7;
             font-size: 1.1rem;
             line-height: 1.6;
-            margin-top: 15px;
+            margin-bottom: 20px;
             font-weight: 500;
         }
 
@@ -178,124 +134,109 @@
             background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
             color: white;
             border: none;
-            padding: 18px 24px;
-            border-radius: 35px;
-            font-size: 1.15rem;
+            padding: 16px 20px;
+            border-radius: 30px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(255, 74, 117, 0.35);
-            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(255, 74, 117, 0.4);
+            margin-top: 15px;
             width: 100%;
             display: block;
             text-align: center;
-            transition: transform 0.2s;
-        }
-
-        .start-btn:active {
-            transform: scale(0.98);
         }
     </style>
 </head>
 <body>
 
-<div class="heart-bg" id="heart-bg"></div>
-
-<div class="container" id="app-container">
-    
-    <!-- MASTER APP GATEWAY VIEW -->
-    <div id="view-gateway" class="view-panel" style="text-align: center;">
+<div class="container">
+    <!-- Welcome View -->
+    <div id="welcome-view">
         <div class="header-icon">💌</div>
         <h1>A Special Quiz For You</h1>
         <p class="subtitle">I created this quick little space to find out how you truly feel about us. Be completely honest!</p>
-        <button class="start-btn" id="trigger-app-start">Begin Quiz ✨</button>
+        <button class="start-btn" onclick="showPanel('q1-view')">Begin Quiz ✨</button>
     </div>
 
-    <!-- MAIN ACTIVE CORE ENGINE WORKSPACE -->
-    <div id="view-core-engine" class="view-panel" style="display: none;">
-        <p class="question-text" id="engine-question-target">Loading presentation query content...</p>
-        <div class="options-list" id="engine-options-target">
-            <!-- Dynamic choice targets render here -->
+    <!-- Question 1 -->
+    <div id="q1-view" style="display: none;" class="question-card">
+        <p class="question-text">When my name pops up on your phone screen, what's your genuine reaction?</p>
+        <div class="options-list">
+            <button class="option-btn" onclick="saveScore(3, 'q2-view')">It immediately brightens my mood and I click it instantly</button>
+            <button class="option-btn" onclick="saveScore(2, 'q2-view')">I smile and reply as soon as I finish what I'm doing</button>
+            <button class="option-btn" onclick="saveScore(1, 'q2-view')">I treat it like any other message or answer later</button>
         </div>
     </div>
 
-    <!-- APPLICATION ENDPOINT ROUTER VIEW -->
-    <div id="view-endpoint" class="view-panel result-screen" style="display: none;">
-        <div class="sparkle-badge">Quiz Complete ✨</div>
-        <div class="heart-display" id="heart-rating">❤️❤️❤️❤️❤️</div>
-        <p class="rating-desc" id="rating-desc">Compiling performance output dataset strings...</p>
+    <!-- Question 2 -->
+    <div id="q2-view" style="display: none;" class="question-card">
+        <p class="question-text">How do you feel when we talk or hang out for hours?</p>
+        <div class="options-list">
+            <button class="option-btn" onclick="saveScore(3, 'q3-view')">Time flies by way too fast, I never want it to end</button>
+            <button class="option-btn" onclick="saveScore(2, 'q3-view')">It's always fun, peaceful, and comfortable</button>
+            <button class="option-btn" onclick="saveScore(1, 'q3-view')">It's nice, but I'm ready to head home after a bit</button>
+        </div>
     </div>
 
+    <!-- Question 3 -->
+    <div id="q3-view" style="display: none;" class="question-card">
+        <p class="question-text">When you look toward your future, do you see me somewhere in it?</p>
+        <div class="options-list">
+            <button class="option-btn" onclick="saveScore(3, 'result-screen')">Absolutely, I want you right by my side</button>
+            <button class="option-btn" onclick="saveScore(2, 'result-screen')">I definitely hope you are a part of it</button>
+            <button class="option-btn" onclick="saveScore(1, 'result-screen')">I haven't thought that far ahead yet</button>
+        </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="result-screen" style="display: none;" class="result-screen">
+        <div class="sparkle-badge">Quiz Complete ✨</div>
+        <div class="heart-display" id="heart-rating">❤️❤️❤️❤️❤️</div>
+        <p class="rating-desc" id="rating-desc"></p>
+    </div>
 </div>
 
 <script>
-    // Comprehensive Quiz Schema Framework Configuration Dataset
-    const ROUTER_MANIFEST = [
-        {
-            question: "When my name pops up on your phone screen, what's your genuine reaction?",
-            options: [
-                { text: "It immediately brightens my mood and I click it instantly", score: 3 },
-                { text: "I smile and reply as soon as I finish what I'm doing", score: 2 },
-                { text: "I treat it like any other message or answer later", score: 1 }
-            ]
-        },
-        {
-            question: "How do you feel when we talk or hang out for hours?",
-            options: [
-                { text: "Time flies by way too fast, I never want it to end", score: 3 },
-                { text: "It's always fun, peaceful, and comfortable", score: 2 },
-                { text: "It's nice, but I'm ready to head home after a bit", score: 1 }
-            ]
-        },
-        {
-            question: "When you look toward your future, do you see me somewhere in it?",
-            options: [
-                { text: "Absolutely, I want you right by my side", score: 3 },
-                { text: "I definitely hope you are a part of it", score: 2 },
-                { text: "I haven't thought that far ahead yet", score: 1 }
-            ]
-        }
-    ];
+    let runningTotal = 0;
 
-    // Execution Context Variables Global State
-    let activePointerIndex = 0;
-    let accumulatedMetricsScore = 0;
+    function showPanel(panelId) {
+        // Safe linear hide execution loop
+        document.getElementById('welcome-view').style.display = 'none';
+        document.getElementById('q1-view').style.display = 'none';
+        document.getElementById('q2-view').style.display = 'none';
+        document.getElementById('q3-view').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'none';
+        
+        document.getElementById(panelId).style.display = 'block';
+    }
 
-    // View Layer DOM Elements Retrieval Map
-    const nodeGateway = document.getElementById('view-gateway');
-    const nodeCoreEngine = document.getElementById('view-core-engine');
-    const nodeEndpoint = document.getElementById('view-endpoint');
-    const labelQuestion = document.getElementById('engine-question-target');
-    const wrapperOptions = document.getElementById('engine-options-target');
-
-    // Central Controller State Machine Layer
-    function transitApplicationState(targetStateCode) {
-        if (targetStateCode === 'CORE') {
-            nodeGateway.style.display = 'none';
-            nodeEndpoint.style.display = 'none';
-            nodeCoreEngine.style.display = 'block';
-            renderCoreDatasetNode();
-        } else if (targetStateCode === 'ENDPOINT') {
-            nodeGateway.style.display = 'none';
-            nodeCoreEngine.style.display = 'none';
-            nodeEndpoint.style.display = 'block';
-            evaluateMetricsOutcome();
+    function saveScore(points, targetPanel) {
+        runningTotal += points;
+        
+        if (targetPanel === 'result-screen') {
+            displayFinalGrade();
+        } else {
+            showPanel(targetPanel);
         }
     }
 
-    // Dynamic Context Engine Generation Subroutine
-    function renderCoreDatasetNode() {
-        // Clear content workspace area completely
-        wrapperOptions.innerHTML = '';
-        
-        const currentDataRecord = ROUTER_MANIFEST[activePointerIndex];
-        labelQuestion.innerText = currentDataRecord.question;
+    function displayFinalGrade() {
+        showPanel('result-screen');
+        const ratingContainer = document.getElementById('heart-rating');
+        const summaryText = document.getElementById('rating-desc');
 
-        // Construct nodes directly to prevent injection lag on strict mobile viewports
-        currentDataRecord.options.forEach((choiceItem) => {
-            const alternativeButton = document.createElement('button');
-            alternativeButton.className = 'option-btn';
-            alternativeButton.innerText = choiceItem.text;
-            
-            // Register hardware interface bindings safely
-            alternativeButton.addEventListener('click', function(e) {
-                e.preventDefault();
+        if (runningTotal >= 8) {
+            ratingContainer.innerText = "❤️ ❤️ ❤️ ❤️ ❤️";
+            summaryText.innerHTML = "<b>Wow... You love me completely.</b><br><br>Reading your answers makes me so incredibly happy. The feeling is 100% mutual, and I am so lucky to have you in my life. Let's keep building this beautiful connection together.";
+        } else if (runningTotal >= 6) {
+            ratingContainer.innerText = "💖 💖 💖 💖";
+            summaryText.innerHTML = "<b>We have something genuinely special.</b><br><br>You care about me deeply and there's a real, sweet spark between us. I love how comfortable we are together, and I can't wait to see how close we grow.";
+        } else {
+            ratingContainer.innerText = "🌸 🌸 🌸";
+            summaryText.innerHTML = "<b>Thank you for being completely real with me.</b><br><br>It looks like we are taking things one step at a time, and that's okay. I really appreciate your honesty, and I value whatever place I hold in your life right now.";
+        }
+    }
+</script>
+
+</body>
+</html>
